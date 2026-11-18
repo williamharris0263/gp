@@ -6,7 +6,7 @@ Pod::Spec.new do |spec|
   spec.author = 'GuoApp contributors'
   spec.source = { :path => '.' }
   spec.license = { :type => 'See application repository' }
-  spec.ios.deployment_target = '15.1'
+  spec.ios.deployment_target = '15.0'
   spec.source_files = 'Sources/**/*.{h,m}'
   spec.public_header_files = 'Sources/*.h'
   spec.vendored_frameworks = 'DuanjuCore.xcframework'

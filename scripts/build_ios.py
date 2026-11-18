@@ -60,11 +60,11 @@ def build_core(simulator=False, bundles=()):
     environment.setdefault('GOSUMDB', 'off')
     environment['CGO_ENABLED'] = '1'
     environment['GOTOOLCHAIN'] = os.environ.get('GOTOOLCHAIN', 'auto')
-    slices = [('iphoneos', 'arm64', 'arm64-apple-ios15.1')]
+    slices = [('iphoneos', 'arm64', 'arm64-apple-ios15.0')]
     if simulator:
         slices.extend([
-            ('iphonesimulator', 'arm64', 'arm64-apple-ios15.1-simulator'),
-            ('iphonesimulator', 'amd64', 'x86_64-apple-ios15.1-simulator'),
+            ('iphonesimulator', 'arm64', 'arm64-apple-ios15.0-simulator'),
+            ('iphonesimulator', 'amd64', 'x86_64-apple-ios15.0-simulator'),
         ])
     libraries = []
     for sdk, architecture, triple in slices:
