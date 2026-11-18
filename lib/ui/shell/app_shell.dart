@@ -7,6 +7,7 @@ import '../../download_converter.dart';
 import '../../merge_queue.dart';
 import '../../download_overview.dart';
 import '../../follow_updater.dart';
+import '../../module_updater.dart';
 import '../../local_store.dart';
 import '../../models.dart';
 import '../app_scope.dart';
@@ -71,7 +72,7 @@ class AppShell extends StatefulWidget {
   State<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   final _heroes = [
     for (final _ in AppTab.values) MaterialApp.createMaterialHeroController(),
   ];
@@ -93,12 +94,14 @@ class _AppShellState extends State<AppShell> {
   DownloadConverter? _converter;
   MergeQueue? _merges;
   FollowUpdater? _followUpdater;
+  ModuleUpdater? _moduleUpdater;
 
   NavigatorState? get _navigator => _navigators[_tab.index].currentState;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     FocusManager.instance.addListener(_followFocus);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -124,10 +127,20 @@ class _AppShellState extends State<AppShell> {
       AppScope.of(context).repository,
       widget.store,
     )..start();
+    _moduleUpdater ??= ModuleUpdater(
+      AppScope.of(context).repository,
+      widget.store,
+    )..start();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _moduleUpdater?.resume();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     FocusManager.instance.removeListener(_followFocus);
     for (final node in _tabFocus) {
       node.dispose();
@@ -146,6 +159,7 @@ class _AppShellState extends State<AppShell> {
     _merges?.dispose();
     _downloads?.dispose();
     _followUpdater?.dispose();
+    _moduleUpdater?.dispose();
     super.dispose();
   }
 

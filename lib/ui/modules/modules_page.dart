@@ -134,9 +134,8 @@ class _ModulesPageState extends State<ModulesPage>
 
   void _show(String message) {
     if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
@@ -339,6 +338,21 @@ class _ModulesPageState extends State<ModulesPage>
       }
     }
     return _list([
+      SettingsCard(
+        children: [
+          SwitchTile(
+            title: '自动更新站源',
+            subtitle: '启动及每 6 小时检查官方更新，只更新已安装模块；回到前台时补查',
+            value: _store.autoUpdateModules,
+            onChanged: _store.profile.admin
+                ? (value) => saveSetting(
+                    context,
+                    () => _store.setAutoUpdateModules(value),
+                  )
+                : null,
+          ),
+        ],
+      ),
       if (_error case final error?) _Note(error),
       if (modules == null && _error == null)
         const _Loading()
@@ -489,9 +503,8 @@ class _ModulesPageState extends State<ModulesPage>
   FocusNode? _detailTarget({required bool resume}) {
     final last = _detailScope.focusedChild;
     if (resume && last != null && last.canRequestFocus) return last;
-    final first = FocusTraversalGroup.of(
-      context,
-    ).findFirstFocus(_detailScope, ignoreCurrentFocus: true);
+    final first = FocusTraversalGroup.of(context)
+        .findFirstFocus(_detailScope, ignoreCurrentFocus: true);
     return first == _detailScope ? null : first;
   }
 
@@ -532,10 +545,8 @@ class _ModulesPageState extends State<ModulesPage>
               padding: const EdgeInsets.only(left: 8),
               child: Text(
                 '模块',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: Theme.of(context).textTheme.headlineSmall
+                    ?.copyWith(fontSize: 22, fontWeight: FontWeight.w800),
               ),
             ),
           ),
@@ -582,10 +593,8 @@ class _ModulesPageState extends State<ModulesPage>
                     _tabLabels[_tabs.index],
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge
+                        ?.copyWith(fontSize: 22, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),

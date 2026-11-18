@@ -480,6 +480,8 @@ class LocalStore extends ChangeNotifier {
   };
   bool get blurAllCovers => _flag('blurAllCovers', true);
   bool get checkUpdates => _flag('checkUpdates', true);
+  bool get autoUpdateModules =>
+      preferences.getBool('autoUpdateModules') ?? true;
   bool get autoExport => _flag('exportAfterDownload', false);
   bool get deleteAfterAutoExport => _flag('deleteAfterAutoExport', false);
   bool get deleteAfterManualExport => _flag('deleteAfterManualExport', false);
@@ -525,9 +527,10 @@ class LocalStore extends ChangeNotifier {
 
   List<String> get recentSearches {
     if (locked) return const [];
-    return _list(
-      _userSettings['recentSearches'],
-    ).whereType<String>().take(20).toList();
+    return _list(_userSettings['recentSearches'])
+        .whereType<String>()
+        .take(20)
+        .toList();
   }
 
   Future<void> _saveSettings(Map<String, Object?> settings) async {
@@ -629,6 +632,10 @@ class LocalStore extends ChangeNotifier {
       : Future.value();
   Future<void> setBlurAllCovers(bool value) => _setting('blurAllCovers', value);
   Future<void> setCheckUpdates(bool value) => _setting('checkUpdates', value);
+  Future<void> setAutoUpdateModules(bool value) => _queue(() async {
+    await preferences.setBool('autoUpdateModules', value);
+    _notify();
+  });
   Future<void> setAutoExport(bool value) =>
       _setting('exportAfterDownload', value);
   Future<void> setDeleteAfterAutoExport(bool value) =>
@@ -1261,9 +1268,8 @@ class LocalStore extends ChangeNotifier {
         if (_configurationError == null) throw StateError('请从设置中恢复备份');
         final data = validateBackup(content);
         final originalAdmin = await _originalAdmin();
-        final backupAdmin = _readProfiles(
-          data['profiles'],
-        ).firstWhere((profile) => profile.admin);
+        final backupAdmin = _readProfiles(data['profiles'])
+            .firstWhere((profile) => profile.admin);
         final verifier = originalAdmin?.protected == true
             ? originalAdmin!
             : backupAdmin;
