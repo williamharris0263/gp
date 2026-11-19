@@ -52,6 +52,7 @@ class ModuleUpdater {
   void _tick() => unawaited(
     run().catchError((Object failure) {
       DiaryService.add('[Modules] 自动检查更新失败：$failure');
+      return 0;
     }),
   );
 
