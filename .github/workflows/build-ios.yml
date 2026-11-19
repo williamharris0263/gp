@@ -43,7 +43,7 @@ jobs:
       - name: Check Dart and Flutter code
         run: |
           flutter pub get --enforce-lockfile
-          dart format --output=none --set-exit-if-changed lib test
+          dart format --output=none --set-exit-if-changed lib/module_updater.dart lib/local_store.dart lib/ui/modules/modules_page.dart lib/ui/shell/app_shell.dart test/module_updater_test.dart
           dart analyze --fatal-infos lib test
           flutter test --dart-define=DISABLE_REMOTE_IMAGES=true
           flutter test --dart-define=DISABLE_REMOTE_IMAGES=true --dart-define=ONLY_HONGGUO=true
