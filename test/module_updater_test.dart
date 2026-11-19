@@ -51,7 +51,7 @@ class _ModuleRepository extends FakeRepository {
     return SourceModule(
       id: indexed,
       name: indexed,
-      version: preparedVersions[indexed] ?? candidates.single.version,
+      version: preparedVersions[indexed] ?? candidates.first.version,
       installed: true,
       token: 'token-$indexed',
     );

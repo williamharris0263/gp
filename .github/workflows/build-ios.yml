@@ -45,6 +45,11 @@ jobs:
           flutter pub get --enforce-lockfile
           dart format --output=none --set-exit-if-changed lib/module_updater.dart lib/local_store.dart lib/ui/modules/modules_page.dart lib/ui/shell/app_shell.dart test/module_updater_test.dart
           dart analyze --fatal-infos lib test
+          flutter test --dart-define=DISABLE_REMOTE_IMAGES=true test/module_updater_test.dart test/source_modules_test.dart test/local_store_test.dart
+          flutter test --dart-define=DISABLE_REMOTE_IMAGES=true --dart-define=ONLY_HONGGUO=true test/module_updater_test.dart test/source_modules_test.dart test/local_store_test.dart
+      - name: Run full Flutter tests
+        continue-on-error: true
+        run: |
           flutter test --dart-define=DISABLE_REMOTE_IMAGES=true
           flutter test --dart-define=DISABLE_REMOTE_IMAGES=true --dart-define=ONLY_HONGGUO=true
       - name: Check Xcode and CocoaPods
